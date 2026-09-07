@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matte — cut the backdrop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'remover/css/style.css' %}">
+</head>
+<body>
+
+  <header class="site-header">
+    <span class="mark">Matte</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Cut the backdrop,<br>keep the subject.</h1>
+      <p class="hero-copy">Drop a photo in. Get back a clean PNG with the background gone — nothing to install, nothing to sign up for.</p>
+    </section>
+
+    <section class="workspace">
+
+      <form id="cut-form">
+        {% csrf_token %}
+
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose a photo to upload">
+          <span class="bracket bracket-tl" aria-hidden="true"></span>
+          <span class="bracket bracket-tr" aria-hidden="true"></span>
+          <span class="bracket bracket-bl" aria-hidden="true"></span>
+          <span class="bracket bracket-br" aria-hidden="true"></span>
+
+          <div class="dropzone-content" id="dropzone-idle">
+            <p class="dropzone-title">Drag a photo here, or click to browse</p>
+            <p class="dropzone-sub">JPG or PNG, up to {{ max_upload_mb }}MB</p>
+          </div>
+
+          <div class="dropzone-content is-hidden" id="dropzone-filled">
+            <p class="dropzone-title" id="filename-display">—</p>
+            <p class="dropzone-sub">Click to choose a different photo</p>
+          </div>
+
+          <input type="file" id="file-input" name="image" accept="image/jpeg,image/png,image/webp" hidden>
+        </div>
+
+        <div class="quality-row">
+          <span class="quality-label">Cut quality</span>
+          <div class="quality-options" role="radiogroup" aria-label="Cut quality">
+            <label class="quality-option">
+              <input type="radio" name="quality" value="fast">
+              <span>Fast</span>
+            </label>
+            <label class="quality-option">
+              <input type="radio" name="quality" value="balanced" checked>
+              <span>Balanced</span>
+            </label>
+            <label class="quality-option">
+              <input type="radio" name="quality" value="precise">
+              <span>Precise</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn" disabled>Cut it out</button>
+        <p class="error-msg is-hidden" id="error-msg"></p>
+      </form>
+
+      <div class="result is-hidden" id="result">
+        <div class="result-panel">
+          <p class="result-label">Original</p>
+          <div class="result-frame">
+            <img id="original-img" alt="Original upload">
+          </div>
+        </div>
+        <div class="result-panel">
+          <p class="result-label">Cut out</p>
+          <div class="result-frame checker" id="result-frame">
+            <img id="result-img" alt="Background removed">
+          </div>
+          <div class="result-actions">
+            <a id="download-link" download="matte-cutout.png">Download PNG</a>
+            <button type="button" id="reset-btn">Start over</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Runs locally on this server. Photos aren't stored — the cut happens in memory and the result comes straight back to you.</p>
+  </footer>
+
+  <script src="{% static 'remover/js/main.js' %}"></script>
+</body>
+</html>
